@@ -1,0 +1,10 @@
+version: "3"
+services:
+  djg_api:
+    container_name: "djg_admin"
+    image: djg_admin:v0.0.1
+    volumes:
+      - ./conf/:/home/conf/
+    ports:
+      - 9000:9000
+    restart: always

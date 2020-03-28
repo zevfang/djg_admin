@@ -17,3 +17,5 @@
 .idea
 lastupdate.tmp
 /routers/commentsRouter*
+/docker/deploy/cmd
+/docker/deploy/image

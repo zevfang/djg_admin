@@ -1,26 +1,24 @@
 # Basic go commands
-# #############/Services/RTSS/layui/RTSS/bin/
-GOBUILD-PATH=../../public/bin
+
+GOBUILD-PATH=./docker/deploy/cmd
 GOBUILD=go build
 GOCLEAN=go clean
 CROSS-LINUX=CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 
 # Binary names
-bin=\
-rtss_local-linux \
+bin=djg_api-linux
 
 # Build
 all: $(bin)
 default: $(bin)
 
-rtss_local-linux:
-	$(CROSS-LINUX) $(GOBUILD) -o $(GOBUILD-PATH)/rtss_local ./main.go
-	mkdir -p $(GOBUILD-PATH)/static/css/ $(GOBUILD-PATH)/static/js/ $(GOBUILD-PATH)/views/
-	cp -rf ./static/css/ $(GOBUILD-PATH)/static/css/
-	cp -rf ./static/js/ $(GOBUILD-PATH)/static/js/
+djg_api-linux:
+	$(CROSS-LINUX) $(GOBUILD) -o $(GOBUILD-PATH)/djg_admin ./main.go
+	cp -rf ./conf/ $(GOBUILD-PATH)/conf/
+	cp -rf ./static/ $(GOBUILD-PATH)/static/
 	cp -rf ./views/ $(GOBUILD-PATH)/views/
 
 # Clean
 clean:
 	$(GOCLEAN)
-	rm -f $(GOBUILD-PATH)/rtss_local
+	rm -rf $(GOBUILD-PATH)/*

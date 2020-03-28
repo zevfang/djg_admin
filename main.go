@@ -10,7 +10,7 @@ import (
 
 func main() {
 	initSession()
-	models.InitMySQL("root:smart_123@tcp(127.0.0.1:33060)/djg_db?charset=utf8&parseTime=true&loc=Local")
+	models.InitMySQL(beego.AppConfig.String("mysql_connect"))
 	beego.SetStaticPath("/layui", "static/layui")
 	beego.SetStaticPath("/modules", "static/layui/lay/modules")
 	beego.SetStaticPath("/js", "static/js")

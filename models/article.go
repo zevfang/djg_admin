@@ -1,13 +1,13 @@
 package models
 
 import (
+	"fmt"
 	"github.com/astaxie/beego/orm"
 )
 
 type Article struct {
 	Model
 	AuthID           int    `json:"auth_id" orm:"column(auth_id);"`
-	UserName         string `json:"username" orm:"column(username);"`
 	VideoNum         int    `json:"video_num" orm:"column(video_num);"`
 	Title            string `json:"title" orm:"column(title);size(100);"`
 	SubTitle         string `json:"sub_title" orm:"column(sub_title);size(100);"`
@@ -22,21 +22,55 @@ type Article struct {
 	State            int    `json:"state" orm:"column(state);"`
 }
 
+type FindArticle struct {
+	Article
+	UserName string `json:"username" orm:"column(username);"`
+	StateVal string `json:"state_val"`
+}
+
+type ArticleTotal struct {
+	Count int64 `json:"count" orm:"column(count);"`
+}
+
 func (u *Article) TableName() string {
 	return "djg_article"
 }
 
-func GetArticles(limit, offset int64) ([]Article, int64, error) {
-	var users []Article
-	db := orm.NewOrm()
+func GetArticles(limit, offset int64, auth_id, state int64) ([]FindArticle, int64, error) {
 	var err error
-	_, err = db.Raw("select a.*,b.username from djg_article a left join djg_auth b on a.auth_id=b.id limit ? offset ?;", limit, offset).QueryRows(&users)
+	var users []FindArticle
+	db := orm.NewOrm()
+	field := " a.*,b.username "
+	//条件
+	var where string = " where 1=1 "
+	if auth_id >= 0 {
+		where += fmt.Sprintf(" and a.auth_id=%d  ", auth_id)
+	}
+	if state >= 0 {
+		where += fmt.Sprintf(" and a.state=%d  ", state)
+	}
+
+	//分页
+	limitOffset := fmt.Sprintf(" limit %d offset %d ", limit, offset)
+	//排序
+	orderBy := " order by a.created_on desc "
+	sql := fmt.Sprintf("select %s from djg_article a left join djg_auth b on a.auth_id=b.id %s %s %s;", field, where, orderBy, limitOffset)
+	_, err = db.Raw(sql).QueryRows(&users)
 	if err != nil {
 		return nil, 0, err
 	}
-	num, err := db.QueryTable(Article{}).Count()
+
+	var rowCount int64
+	sqlCount := fmt.Sprintf("select count(1) from djg_article a left join djg_auth b on a.auth_id=b.id %s ;", where)
+	err = db.Raw(sqlCount).QueryRow(&rowCount)
 	if err != nil {
 		return nil, 0, err
 	}
-	return users, num, err
+	return users, rowCount, err
+}
+
+func EditArticle(model Article) error {
+	db := orm.NewOrm()
+	_, err := db.Update(&model)
+	return err
 }

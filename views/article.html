@@ -8,70 +8,127 @@
 <body>
 <div class="layui-fluid">
     <div class="layui-card">
-{{/*        <div class="layui-form layui-card-header layuiadmin-card-header-auto">*/}}
-{{/*            <div class="layui-form-item">*/}}
-{{/*                <div class="demoTable">*/}}
-{{/*                    搜索ID：*/}}
-{{/*                    <div class="layui-inline">*/}}
-{{/*                        <input class="layui-input" name="id" id="demoReload" autocomplete="off">*/}}
-{{/*                    </div>*/}}
-{{/*                    <button class="layui-btn" data-type="reload">搜索</button>*/}}
-{{/*                </div>*/}}
-{{/*                <div class="layui-inline">*/}}
-{{/*                    <label class="layui-form-label">工单号</label>*/}}
-{{/*                    <div class="layui-input-block">*/}}
-{{/*                        <input type="text" name="orderid" placeholder="请输入" autocomplete="off" class="layui-input">*/}}
-{{/*                    </div>*/}}
-{{/*                </div>*/}}
-{{/*                <div class="layui-inline">*/}}
-{{/*                    <label class="layui-form-label">工单标题</label>*/}}
-{{/*                    <div class="layui-input-block">*/}}
-{{/*                        <input type="text" name="title" placeholder="请输入" autocomplete="off" class="layui-input">*/}}
-{{/*                    </div>*/}}
-{{/*                </div>*/}}
-{{/*                <div class="layui-inline">*/}}
-{{/*                    <label class="layui-form-label">业务性质</label>*/}}
-{{/*                    <div class="layui-input-block">*/}}
-{{/*                        <input type="text" name="attr" placeholder="请输入" autocomplete="off" class="layui-input">*/}}
-{{/*                    </div>*/}}
-{{/*                </div>*/}}
-{{/*                <div class="layui-inline">*/}}
-{{/*                    <label class="layui-form-label">受理人</label>*/}}
-{{/*                    <div class="layui-input-block">*/}}
-{{/*                        <input type="text" name="accept" placeholder="请输入" autocomplete="off" class="layui-input">*/}}
-{{/*                    </div>*/}}
-{{/*                </div>*/}}
-{{/*                <div class="layui-inline">*/}}
-{{/*                    <button class="layui-btn layuiadmin-btn-order" lay-submit="" lay-filter="LAY-app-order-search">*/}}
-{{/*                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>*/}}
-{{/*                    </button>*/}}
-{{/*                </div>*/}}
-{{/*            </div>*/}}
-{{/*        </div>*/}}
         <div class="layui-card-body">
-            <table  id="articleTable" class="layui-hide" lay-filter="table"></table>
 
+            <div style="margin-top:10px;">
+                <div id="app" class="layui-form"  >
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <select id="authSelect" name="modules" lay-verify="required" lay-search=""  >
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select id="stateSelect" name="modules" lay-verify="required" lay-search=""  >
+                                    <option  value="-1" >请选择状态</option>
+                                    <option  value="0" >待审核</option>
+                                    <option  value="1" >已发布</option>
+                                </select>
+                            </div>
+                            <button id="btnSearch" class="layui-btn" data-type="btnSearch">检索</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table  id="articleTable" class="layui-hide" lay-filter="table"></table>
             <script type="text/html" id="toolbarDemo">
                 <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-                    <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
-                    <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中数据</button>
                 </div>
             </script>
 
             <script type="text/html" id="barTable">
-                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
-                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="verify">审核</a>
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">查看</a>
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="verify">发布</a>
             </script>
         </div>
     </div>
 </div>
 
+<div id="openUpd" class="layui-form" lay-filter="openUpd"  style="display: none;padding: 20px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">Cos编号</label>
+            <div class="layui-input-inline">
+                <input id="video_num" type="text" disabled="disabled" name="title" lay-verify="required" value="25" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">所属账号</label>
+            <div class="layui-input-inline">
+                <input id="username" type="text" disabled="disabled" lay-verify="required" value=""  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">主标题</label>
+        <div class="layui-input-block">
+            <input id="title" type="text"  lay-verify="required" value="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">副标题</label>
+        <div class="layui-input-block">
+            <input id="sub_title" type="text" lay-verify="required" value="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">标签</label>
+        <div class="layui-input-block">
+            <input id="tags" type="text" name="author" lay-verify="required" value="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">视频简介</label>
+        <div class="layui-input-inline">
+            <textarea id="desc" name="content" lay-verify="required" style="width: 540px; height: 60px;" autocomplete="off" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">百家文章ID</label>
+        <div class="layui-input-block">
+            <input id="bjh_article_id" type="text" name="title" lay-verify="required" value="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">发布状态</label>
+        <div class="layui-input-inline">
+            <input id="state" type="checkbox" lay-verify="required" lay-filter="status" lay-skin="switch" lay-text="已发布|待审核">
+        </div>
+    </div>
+</div>
+
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 <script src="/layui/layui.js"></script>
+<script src="/js/vue.js"></script>
+
 <script>
-    layui.use('table', function(){
-        var table = layui.table;
+
+    $(function () {
+        $.ajax({
+            url: '/v1/auth/get_auths',
+            type: 'get',
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                $("#authSelect").append("<option value='-1'>请选择达人</option>");
+                let data = result.data;
+                for (var k in result.data) {
+                    $("#authSelect").append("<option value='" + data[k].id + "'>" + data[k].username + "</option>");
+                }
+            }
+        });
+    });
+
+    layui.use(['table','form', 'layedit', 'laydate'], function(){
+        var table = layui.table,
+            form = layui.form,
+            layer = layui.layer,
+            layedit = layui.layedit,
+            laydate = layui.laydate;
 
         table.render({
             elem: '#articleTable'
@@ -102,17 +159,19 @@
                 ,icon: 'layui-icon-tips'
             }]
             ,title: '审核表'
-            ,height: 'full-145'
+            ,height: 'full-200'
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'},
                 {field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true},
+                {field:'state_val', title:'状态', width:80, fixed: 'left', unresize: true, sort: true},
                 {field:'username', title:'IP', width:160},
                 {field:'video_num', title:'Cos编号', width:90},
                 {field:'title', title:'主标题', width:300},
                 {field:'sub_title', title:'副标题', width:200},
                 {field:'tags', title:'标签', width:300},
                 {field:'desc', title:'视频简介', width:100, sort: true},
-                {fixed: 'right', title:'操作', toolbar: '#barTable', width:170},
+                {field:'created_on', title:'创建时间', width:220, sort: true},
+                {fixed: 'right', title:'操作', toolbar: '#barTable', width:120},
             ]]
             ,page: true
         });
@@ -125,13 +184,6 @@
                     var data = checkStatus.data;
                     layer.alert(JSON.stringify(data));
                     break;
-                case 'getCheckLength':
-                    var data = checkStatus.data;
-                    layer.msg('选中了：'+ data.length + ' 个');
-                    break;
-                case 'isAll':
-                    layer.msg(checkStatus.isAll ? '全选': '未全选');
-                    break;
 
                 //自定义头工具栏右侧图标 - 提示
                 case 'LAYTABLE_TIPS':
@@ -143,26 +195,78 @@
         //监听行工具事件
         table.on('tool(table)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'detail'){
                 layer.msg('ID：'+ data.title + ' 的查看操作');
             } else if(obj.event === 'edit'){
-                layer.prompt({
-                    formType: 2
-                    ,value: data.title
-                }, function(value, index){
-                    obj.update({
-                        title: value
-                    });
-                    layer.close(index);
+                if (data.state===0){
+                    $("#state").prop('checked',false);
+                }else if (data.state===1){
+                    $("#state").prop('checked',true);
+                }
+                form.render();
+                form.on('switch(status)',function(switchData){
+                    if (switchData.elem.checked===true){
+                        data.state = 1
+                    }else {
+                        data.state = 0
+                    }
+                });
+
+                //赋值
+                $("#video_num").val(data.video_num);
+                $("#username").val(data.username);
+                $("#title").val(data.title);
+                $("#sub_title").val(data.sub_title);
+                $("#tags").val(data.tags);
+                $("#desc").val(data.desc);
+                $("#bjh_article_id").val(data.bjh_article_id);
+
+                layer.open({
+                    type: 1,
+                    title: "修改信息",
+                    maxmin: true,//是否显示最大最小化按钮
+                    shadeClose: false,
+                    area: ['680px', '560px'],
+                    shade:0,
+                    btn: ['保存', '取消'],
+                    content: $("#openUpd"),
+                    yes: function(index, layero){
+                        data.video_num=parseInt($("#video_num").val()),
+                        data.username=$("#username").val(),
+                        data.title=$("#title").val(),
+                        data.sub_title=$("#sub_title").val(),
+                        data.tags=$("#tags").val(),
+                        data.desc=$("#desc").val(),
+                        data.bjh_article_id=$("#bjh_article_id").val(),
+                        console.log(data)
+                        $.ajax({
+                            url: '/v1/article/upd_article',
+                            contentType: 'application/json',
+                            type: 'POST',
+                            dataType: "json",
+                            data:JSON.stringify(data),
+                            success: function (result) {
+                                console.log(result)
+                                if (result.code===200){
+                                    defaultReloadTable()
+                                    layer.close(index)
+                                }else {
+                                    layer.msg(result.msg);
+                                }
+                            }
+                        });
+                    },
+                    no:function(index, layero){
+
+                    }
                 });
             }else if(obj.event === 'verify'){
                 layer.prompt({
                     formType: 2
-                    ,value: data.email
+                    ,value: data.state
                 }, function(value, index){
                     obj.update({
-                        email: value
+                        state: value
                     });
                     layer.close(index);
                 });
@@ -172,7 +276,6 @@
         var $ = layui.$, active = {
             reload: function(){
                 var demoReload = $('#demoReload');
-
                 //执行重载
                 table.reload('testReload', {
                     page: {
@@ -191,7 +294,37 @@
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
+
+        $("#btnSearch").click(function () {
+            //执行重载
+            reloadTable()
+        });
+
+        function reloadTable() {
+            table.reload('articleTable', {
+                where: {
+                    "auth_id":$("#authSelect").val(),
+                    "state":$("#stateSelect").val()
+                },page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        }
+        function defaultReloadTable() {
+            table.reload('articleTable', {
+                where: {
+                    "auth_id":$("#authSelect").val(),
+                    "state":$("#stateSelect").val()
+                }
+            });
+        }
     });
+
+
+
 </script>
 </body>
+
+
+
 </html>

@@ -1,5 +1,10 @@
 package controllers
 
+import (
+	"djg_admin/models"
+	"djg_admin/utils"
+)
+
 type AuthController struct {
 	BaseController
 }
@@ -11,7 +16,17 @@ func (c *AuthController) Get() {
 }
 
 func (c *AuthController) GetAuths() {
-
+	list, err := models.GetAuths()
+	if err != nil {
+		return
+	}
+	c.Data["json"] = utils.TableResult{
+		Code:  200,
+		Msg:   "成功",
+		Count: int64(len(list)),
+		Data:  &list,
+	}
+	c.ServeJSON()
 }
 
 func (c *AuthController) GetAuth() {

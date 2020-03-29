@@ -3,7 +3,7 @@ package controllers
 import (
 	"djg_admin/models"
 	"djg_admin/utils"
-	"fmt"
+	"encoding/json"
 )
 
 type ArticleController struct {
@@ -25,24 +25,76 @@ func (c *ArticleController) Get() {
 }
 
 func (c *ArticleController) GetArticles() {
+	auth_id, _ := c.GetInt64("auth_id", -1)
+	state, _ := c.GetInt64("state", -1)
 	page, _ := c.GetInt64("page", 1)
 	limit, _ := c.GetInt64("limit", 10)
 	offset := (page - 1) * limit
-	articles, total, err := models.GetArticles(limit, offset)
+	articles, total, err := models.GetArticles(limit, offset, auth_id, state)
 	if err != nil {
-		fmt.Println(err)
+		c.Data["json"] = utils.TableResult{
+			Code:  400,
+			Msg:   "参数错误",
+			Count: 0,
+			Data:  nil,
+		}
+		c.ServeJSON()
 	}
+	resultData := []models.FindArticle{}
+	for _, item := range articles {
+		var model = models.FindArticle{}
+		model = item
+		switch item.State {
+		case utils.ARTICLE_PENDING_REVIEW:
+			model.StateVal = utils.ARTICLE_PENDING_REVIEW_VAL
+		case utils.ARTICLE_PUBLISHED:
+			model.StateVal = utils.ARTICLE_PUBLISHED_VAL
+		}
+		resultData = append(resultData, model)
+	}
+
 	c.Data["json"] = utils.TableResult{
 		Code:  200,
 		Msg:   "成功",
 		Count: total,
-		Data:  &articles,
+		Data:  &resultData,
 	}
 	c.ServeJSON()
 }
+
 func (c *ArticleController) GetArticle() {
 
 }
-func (c *ArticleController) UpdArticle() {
 
+func (c *ArticleController) UpdArticle() {
+	var model models.Article
+	resBody := c.Ctx.Input.RequestBody
+	err := json.Unmarshal(resBody, &model)
+	if err != nil {
+		c.Data["json"] = utils.TableResult{
+			Code:  400,
+			Msg:   "序列化出错",
+			Count: 0,
+			Data:  nil,
+		}
+		c.ServeJSON()
+	}
+	err = models.EditArticle(model)
+	if err != nil {
+		c.Data["json"] = utils.TableResult{
+			Code:  400,
+			Msg:   "更新失败",
+			Count: 0,
+			Data:  nil,
+		}
+		c.ServeJSON()
+	}
+
+	c.Data["json"] = utils.TableResult{
+		Code:  200,
+		Msg:   "更新成功",
+		Count: 0,
+		Data:  nil,
+	}
+	c.ServeJSON()
 }

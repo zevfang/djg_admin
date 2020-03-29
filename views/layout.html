@@ -62,7 +62,7 @@
 
     <div class="layui-body">
         <!-- 内容主体区域 -->
-{{/*        <iframe layui="/v1/article.html?from=demo" frameborder="0" id="=admin" style="width: 100%; height: 100%;"></iframe>*/}}
+{{/*        <iframe layui="/v1/article/" frameborder="0" id="=admin" style="width: 100%; height: 100%;"></iframe>*/}}
         {{.LayoutContent}}
     </div>
 
@@ -81,7 +81,7 @@
         //监听导航点击
         element.on('nav(left_menu)', function(elem){
             //console.log(elem)
-            //layer.msg(elem.text());
+            layer.msg(elem.text());
         });
     });
 

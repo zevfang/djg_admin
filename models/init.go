@@ -10,6 +10,8 @@ import (
 
 var DB *sql.DB
 
+const DRIVER = "mysql"
+
 type Model struct {
 	ID         int       `json:"id" orm:"column(id);size(100);pk"`
 	CreatedOn  time.Time `json:"created_on" orm:"column(created_on);type(datetime)"`

@@ -4,19 +4,20 @@ import (
 	"djg_admin/models"
 	"djg_admin/utils"
 	"encoding/json"
+	"time"
 )
 
 type ArticleController struct {
 	BaseController
 }
 
-func (c *ArticleController) Prepare() {
-	isLogin := c.GetUser()
-	if !isLogin {
-		c.Redirect("/login", 302)
-		return
-	}
-}
+//func (c *ArticleController) Prepare() {
+//	isLogin := c.GetUser()
+//	if !isLogin {
+//		c.Redirect("/login", 302)
+//		return
+//	}
+//}
 
 // @router / [get]
 func (c *ArticleController) Get() {
@@ -27,10 +28,14 @@ func (c *ArticleController) Get() {
 func (c *ArticleController) GetArticles() {
 	auth_id, _ := c.GetInt64("auth_id", -1)
 	state, _ := c.GetInt64("state", -1)
+	verify_on := c.GetString("verify_on", "")
+	if verify_on == "审核时间" {
+		verify_on = ""
+	}
 	page, _ := c.GetInt64("page", 1)
 	limit, _ := c.GetInt64("limit", 10)
 	offset := (page - 1) * limit
-	articles, total, err := models.GetArticles(limit, offset, auth_id, state)
+	articles, total, err := models.GetArticles(limit, offset, auth_id, state, verify_on)
 	if err != nil {
 		c.Data["json"] = utils.TableResult{
 			Code:  400,
@@ -79,6 +84,7 @@ func (c *ArticleController) UpdArticle() {
 		}
 		c.ServeJSON()
 	}
+	model.VerifyOn = time.Now() //审核时间
 	err = models.EditArticle(model)
 	if err != nil {
 		c.Data["json"] = utils.TableResult{

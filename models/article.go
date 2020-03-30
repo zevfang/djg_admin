@@ -3,23 +3,25 @@ package models
 import (
 	"fmt"
 	"github.com/astaxie/beego/orm"
+	"time"
 )
 
 type Article struct {
 	Model
-	AuthID           int    `json:"auth_id" orm:"column(auth_id);"`
-	VideoNum         int    `json:"video_num" orm:"column(video_num);"`
-	Title            string `json:"title" orm:"column(title);size(100);"`
-	SubTitle         string `json:"sub_title" orm:"column(sub_title);size(100);"`
-	Topic            string `json:"topic" orm:"column(topic);size(100);"`
-	Cate             string `json:"cate" orm:"column(cate);size(100);"`
-	Tags             string `json:"tags" orm:"column(tags);size(200);"`
-	Desc             string `json:"desc" orm:"column(desc);size(500);"`
-	Content          string `json:"content" orm:"column(content);type(text);"`
-	CosCoverImageUrl string `json:"cos_cover_image_url" orm:"column(cos_cover_image_url);size(500);"`
-	CosVideoUrl      string `json:"cos_video_url" orm:"column(cos_video_url);size(500);"`
-	BJHArticleId     string `json:"bjh_article_id" orm:"column(bjh_article_id);size(500);"`
-	State            int    `json:"state" orm:"column(state);"`
+	AuthID           int       `json:"auth_id" orm:"column(auth_id);"`
+	VideoNum         int       `json:"video_num" orm:"column(video_num);"`
+	Title            string    `json:"title" orm:"column(title);size(100);"`
+	SubTitle         string    `json:"sub_title" orm:"column(sub_title);size(100);"`
+	Topic            string    `json:"topic" orm:"column(topic);size(100);"`
+	Cate             string    `json:"cate" orm:"column(cate);size(100);"`
+	Tags             string    `json:"tags" orm:"column(tags);size(200);"`
+	Desc             string    `json:"desc" orm:"column(desc);size(500);"`
+	Content          string    `json:"content" orm:"column(content);type(text);"`
+	CosCoverImageUrl string    `json:"cos_cover_image_url" orm:"column(cos_cover_image_url);size(500);"`
+	CosVideoUrl      string    `json:"cos_video_url" orm:"column(cos_video_url);size(500);"`
+	BJHArticleId     string    `json:"bjh_article_id" orm:"column(bjh_article_id);size(500);"`
+	State            int       `json:"state" orm:"column(state);"`
+	VerifyOn         time.Time `json:"verify_on" orm:"column(verify_on);"`
 }
 
 type FindArticle struct {
@@ -36,7 +38,7 @@ func (u *Article) TableName() string {
 	return "djg_article"
 }
 
-func GetArticles(limit, offset int64, auth_id, state int64) ([]FindArticle, int64, error) {
+func GetArticles(limit, offset int64, auth_id, state int64, verify_on string) ([]FindArticle, int64, error) {
 	var err error
 	var users []FindArticle
 	db := orm.NewOrm()
@@ -48,6 +50,9 @@ func GetArticles(limit, offset int64, auth_id, state int64) ([]FindArticle, int6
 	}
 	if state >= 0 {
 		where += fmt.Sprintf(" and a.state=%d  ", state)
+	}
+	if len(verify_on) > 0 {
+		where += fmt.Sprintf(" and a.verify_on = '%s'  ", verify_on)
 	}
 
 	//分页

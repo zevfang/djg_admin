@@ -13,18 +13,20 @@
             <div style="margin-top:10px;">
                 <div id="app" class="layui-form"  >
                     <div class="layui-form-item">
+                        <div class="layui-input-inline">
+                            <select id="authSelect" name="modules" lay-verify="required" lay-search=""  ></select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select id="stateSelect" name="modules" lay-verify="required" lay-search=""  >
+                                <option  value="-1" >请选择状态</option>
+                                <option  value="0" >待审核</option>
+                                <option  value="1" >已发布</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <input id="verify_on" type="text"  class="layui-input"  placeholder="审核日期">
+                        </div>
                         <div class="layui-inline">
-                            <div class="layui-input-inline">
-                                <select id="authSelect" name="modules" lay-verify="required" lay-search=""  >
-                                </select>
-                            </div>
-                            <div class="layui-input-inline">
-                                <select id="stateSelect" name="modules" lay-verify="required" lay-search=""  >
-                                    <option  value="-1" >请选择状态</option>
-                                    <option  value="0" >待审核</option>
-                                    <option  value="1" >已发布</option>
-                                </select>
-                            </div>
                             <button id="btnSearch" class="layui-btn" data-type="btnSearch">检索</button>
                         </div>
                     </div>
@@ -130,6 +132,10 @@
             layedit = layui.layedit,
             laydate = layui.laydate;
 
+        laydate.render({
+            elem: '#verify_on'
+        });
+
         table.render({
             elem: '#articleTable'
             ,url:'/v1/article/get_articles'
@@ -171,6 +177,7 @@
                 {field:'tags', title:'标签', width:300},
                 {field:'desc', title:'视频简介', width:100, sort: true},
                 {field:'created_on', title:'创建时间', width:220, sort: true},
+                {field:'verify_on', title:'创建时间', width:220, sort: true},
                 {fixed: 'right', title:'操作', toolbar: '#barTable', width:120},
             ]]
             ,page: true
@@ -304,7 +311,8 @@
             table.reload('articleTable', {
                 where: {
                     "auth_id":$("#authSelect").val(),
-                    "state":$("#stateSelect").val()
+                    "state":$("#stateSelect").val(),
+                    "verify_on": $("#verify_on").val()
                 },page: {
                     curr: 1 //重新从第 1 页开始
                 }
@@ -314,7 +322,8 @@
             table.reload('articleTable', {
                 where: {
                     "auth_id":$("#authSelect").val(),
-                    "state":$("#stateSelect").val()
+                    "state":$("#stateSelect").val(),
+                    "verify_on": $("#verify_on").val()
                 }
             });
         }

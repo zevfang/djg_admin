@@ -4,20 +4,22 @@ import (
 	"djg_admin/models"
 	"djg_admin/utils"
 	"encoding/json"
-	"time"
+	"github.com/astaxie/beego"
 )
 
 type ArticleController struct {
 	BaseController
 }
 
-//func (c *ArticleController) Prepare() {
-//	isLogin := c.GetUser()
-//	if !isLogin {
-//		c.Redirect("/login", 302)
-//		return
-//	}
-//}
+func (c *ArticleController) Prepare() {
+	if beego.AppConfig.String("runmode") == "prod" {
+		isLogin := c.GetUser()
+		if !isLogin {
+			c.Redirect("/login", 302)
+			return
+		}
+	}
+}
 
 // @router / [get]
 func (c *ArticleController) Get() {
@@ -84,7 +86,6 @@ func (c *ArticleController) UpdArticle() {
 		}
 		c.ServeJSON()
 	}
-	model.VerifyOn = time.Now() //审核时间
 	err = models.EditArticle(model)
 	if err != nil {
 		c.Data["json"] = utils.TableResult{

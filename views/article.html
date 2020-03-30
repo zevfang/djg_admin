@@ -24,7 +24,7 @@
                             </select>
                         </div>
                         <div class="layui-input-inline">
-                            <input id="verify_on" type="text"  class="layui-input"  placeholder="审核日期">
+                            <input id="param_verify_on" type="text"  class="layui-input"  placeholder="审核日期">
                         </div>
                         <div class="layui-inline">
                             <button id="btnSearch" class="layui-btn" data-type="btnSearch">检索</button>
@@ -96,6 +96,12 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">审核日期</label>
+        <div class="layui-input-block">
+            <input id="verify_on" type="text"  class="layui-input"  placeholder="审核日期">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">发布状态</label>
         <div class="layui-input-inline">
             <input id="state" type="checkbox" lay-verify="required" lay-filter="status" lay-skin="switch" lay-text="已发布|待审核">
@@ -133,7 +139,12 @@
             laydate = layui.laydate;
 
         laydate.render({
-            elem: '#verify_on'
+            elem: '#param_verify_on'
+        });
+
+        laydate.render({
+            elem: '#verify_on',
+            //type: 'datetime'
         });
 
         table.render({
@@ -177,7 +188,8 @@
                 {field:'tags', title:'标签', width:300},
                 {field:'desc', title:'视频简介', width:100, sort: true},
                 {field:'created_on', title:'创建时间', width:220, sort: true},
-                {field:'verify_on', title:'创建时间', width:220, sort: true},
+                {field:'verify_on', title:'审核时间', width:220, sort: true},
+                {field:'bjh_article_id', title:'百家号文章地址', width:220, sort: true},
                 {fixed: 'right', title:'操作', toolbar: '#barTable', width:120},
             ]]
             ,page: true
@@ -227,25 +239,29 @@
                 $("#tags").val(data.tags);
                 $("#desc").val(data.desc);
                 $("#bjh_article_id").val(data.bjh_article_id);
+                $("#verify_on").val(data.verify_on);
 
                 layer.open({
                     type: 1,
                     title: "修改信息",
                     maxmin: true,//是否显示最大最小化按钮
                     shadeClose: false,
-                    area: ['680px', '560px'],
+                    area: ['680px', '500px'],
                     shade:0,
                     btn: ['保存', '取消'],
                     content: $("#openUpd"),
                     yes: function(index, layero){
-                        data.video_num=parseInt($("#video_num").val()),
-                        data.username=$("#username").val(),
-                        data.title=$("#title").val(),
-                        data.sub_title=$("#sub_title").val(),
-                        data.tags=$("#tags").val(),
-                        data.desc=$("#desc").val(),
-                        data.bjh_article_id=$("#bjh_article_id").val(),
+                        data.video_num=parseInt($("#video_num").val());
+                        data.username=$("#username").val();
+                        data.title=$("#title").val();
+                        data.sub_title=$("#sub_title").val();
+                        data.tags=$("#tags").val();
+                        data.desc=$("#desc").val();
+                        data.bjh_article_id=$("#bjh_article_id").val();
+                        let verify_on_str=$("#verify_on").val();
+                        data.verify_on=new Date(Date.parse(verify_on_str.replace(/-/g, "/")));
                         console.log(data)
+
                         $.ajax({
                             url: '/v1/article/upd_article',
                             contentType: 'application/json',
@@ -280,28 +296,6 @@
             }
         });
 
-        var $ = layui.$, active = {
-            reload: function(){
-                var demoReload = $('#demoReload');
-                //执行重载
-                table.reload('testReload', {
-                    page: {
-                        curr: 1 //重新从第 1 页开始
-                    }
-                    ,where: {
-                        key: {
-                            id: demoReload.val()
-                        }
-                    }
-                }, 'data');
-            }
-        };
-
-        $('.demoTable .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
-
         $("#btnSearch").click(function () {
             //执行重载
             reloadTable()
@@ -312,7 +306,7 @@
                 where: {
                     "auth_id":$("#authSelect").val(),
                     "state":$("#stateSelect").val(),
-                    "verify_on": $("#verify_on").val()
+                    "verify_on": $("#param_verify_on").val()
                 },page: {
                     curr: 1 //重新从第 1 页开始
                 }
@@ -323,7 +317,7 @@
                 where: {
                     "auth_id":$("#authSelect").val(),
                     "state":$("#stateSelect").val(),
-                    "verify_on": $("#verify_on").val()
+                    "verify_on": $("#param_verify_on").val()
                 }
             });
         }

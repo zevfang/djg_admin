@@ -1,14 +1,18 @@
 package controllers
 
+import "github.com/astaxie/beego"
+
 type IndexController struct {
 	BaseController
 }
 
 func (c *IndexController) Prepare() {
-	isLogin := c.GetUser()
-	if !isLogin {
-		c.Redirect("/login", 302)
-		return
+	if beego.AppConfig.String("runmode") == "prod" {
+		isLogin := c.GetUser()
+		if !isLogin {
+			c.Redirect("/login", 302)
+			return
+		}
 	}
 }
 

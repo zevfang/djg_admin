@@ -32,6 +32,12 @@ func NewNamespace() *beego.Namespace {
 			beego.NSRouter("/add_auth", &controllers.AuthController{}, "post:AddAuth"),
 			beego.NSRouter("/upd_auth", &controllers.AuthController{}, "post:UpdAuth"),
 		),
+		beego.NSNamespace("/ctr",
+			beego.NSInclude(
+				&controllers.AuthController{},
+			),
+			beego.NSRouter("/get_ctr_top", &controllers.AuthController{}, "get:GetCtrTop"),
+		),
 	)
 	return np
 }

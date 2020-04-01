@@ -28,15 +28,16 @@ func NewNamespace() *beego.Namespace {
 				&controllers.AuthController{},
 			),
 			beego.NSRouter("/get_auths", &controllers.AuthController{}, "get:GetAuths"),
+			beego.NSRouter("/get_auths_select", &controllers.AuthController{}, "get:GetAuthsSelect"),
 			beego.NSRouter("/get_auth", &controllers.AuthController{}, "get:GetAuth"),
 			beego.NSRouter("/add_auth", &controllers.AuthController{}, "post:AddAuth"),
 			beego.NSRouter("/upd_auth", &controllers.AuthController{}, "post:UpdAuth"),
 		),
 		beego.NSNamespace("/ctr",
 			beego.NSInclude(
-				&controllers.AuthController{},
+				&controllers.CtrController{},
 			),
-			beego.NSRouter("/get_ctr_top", &controllers.AuthController{}, "get:GetCtrTop"),
+			beego.NSRouter("/get_ctr_top", &controllers.CtrController{}, "get:GetCtrTop"),
 		),
 	)
 	return np

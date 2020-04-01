@@ -42,6 +42,29 @@ func (c *AuthController) GetAuths() {
 	c.ServeJSON()
 }
 
+func (c *AuthController) GetAuthsSelect() {
+	resultData := []models.AuthSelect{}
+	list, err := models.GetAuthsAll()
+	for _, item := range list {
+		resultData = append(resultData, models.AuthSelect{
+			Name:     item.Username,
+			Value:    item.ID,
+			Velected: "",
+			Disabled: "",
+		})
+	}
+	if err != nil {
+		return
+	}
+	c.Data["json"] = utils.TableResult{
+		Code:  0,
+		Msg:   "success",
+		Count: int64(len(resultData)),
+		Data:  &resultData,
+	}
+	c.ServeJSON()
+}
+
 func (c *AuthController) GetAuth() {
 
 }

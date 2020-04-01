@@ -20,14 +20,47 @@ type Auth struct {
 	CreatedOn  time.Time `json:"created_on" orm:"column(created_on);type(datetime)"`
 }
 
+type AuthSelect struct {
+	Name     string `json:"name"`
+	Value    int    `json:"value"`
+	Velected string `json:"velected"` //selected
+	Disabled string `json:"disabled"` //disabled
+}
+
 func (u *Auth) TableName() string {
 	return "djg_auth"
+}
+
+func GetAuthsAll() ([]Auth, error) {
+	var auths []Auth
+	db := orm.NewOrm()
+	_, err := db.Raw("select * from djg_auth").QueryRows(&auths)
+	if err != nil {
+		return nil, err
+	}
+	return auths, err
 }
 
 func GetAuths(username string) ([]Auth, error) {
 	var where string = " where 1=1 "
 	if len(username) > 0 {
 		where += " and username like '%" + username + "%' "
+	}
+
+	var auths []Auth
+	db := orm.NewOrm()
+	sqlStr := fmt.Sprintf("select * from djg_auth %s;", where)
+	_, err := db.Raw(sqlStr).QueryRows(&auths)
+	if err != nil {
+		return nil, err
+	}
+	return auths, err
+}
+
+func GetAuthByIds(ids string) ([]Auth, error) {
+	var where string = " where 1=1 "
+	if len(ids) > 0 {
+		where += " and id in (" + ids + ")"
 	}
 
 	var auths []Auth

@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>ctr列表</title>
     <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <link rel="stylesheet" type="text/css" href="//raw.githack.com/hnzzmsf/layui-formSelects/master/dist/formSelects-v4.css"/>
 </head>
 <body>
 <div class="layui-fluid">
@@ -13,90 +14,29 @@
             <div style="margin-top:10px;">
                 <div id="app" class="layui-form"  >
                     <div class="layui-form-item">
-                        <div class="layui-input-inline">
-                            <input type="text" id="param_username" name="param_username" lay-verify="param_username" autocomplete="off" placeholder="请输入名称" class="layui-input">
+                        <div class="layui-input-inline" style="width: 60px;">
+                            <input id="page_no" type="text" placeholder="页码"  name="title" lay-verify="required" value="1" autocomplete="off" class="layui-input ">
+                        </div>
+                        <div class="layui-input-inline" style="width:500px;">
+                            <select id="user_ids" name="city" class="layui-input" xm-select="user_ids" >
+                            </select>
                         </div>
                         <div class="layui-inline">
-                            <button id="btnSearch" class="layui-btn" data-type="btnSearch">检索</button>
+                            <button id="btnSearch" class="layui-btn" data-type="btnSearch">开始计算</button>
                         </div>
                     </div>
+
                 </div>
+
             </div>
 
-            <table  id="authTable" class="layui-hide" lay-filter="table"></table>
+            <table  id="ctrTable" class="layui-hide" lay-filter="table"></table>
             <script type="text/html" id="toolbarDemo">
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中数据</button>
                 </div>
             </script>
 
-            <script type="text/html" id="barTable">
-                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">编辑</a>
-            </script>
-        </div>
-    </div>
-</div>
-
-<div id="openUpd" class="layui-form" lay-filter="openUpd"  style="display: none;padding: 20px 30px 0 0;">
-
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">账号</label>
-            <div class="layui-input-inline">
-                <input id="username" type="text" name="username" lay-verify="required" value="" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">密码</label>
-            <div class="layui-input-inline">
-                <input id="password" type="text"  name="password" lay-verify="required" value=""  autocomplete="off" class="layui-input">
-            </div>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">app_id</label>
-            <div class="layui-input-inline">
-                <input id="app_id" type="text" name="app_id" lay-verify="required" value="25" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">app_token</label>
-            <div class="layui-input-inline">
-                <input id="app_token" type="text" name="app_token"   lay-verify="required" value=""  autocomplete="off" class="layui-input">
-            </div>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">secret_id</label>
-        <div class="layui-input-block">
-            <input id="secret_id" type="text"  lay-verify="required" value="" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">secret_key</label>
-        <div class="layui-input-block">
-            <input id="secret_key" type="text" lay-verify="required" value="" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">cos_address</label>
-        <div class="layui-input-block">
-            <input id="cos_address" type="text" name="author" lay-verify="required" value="" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">ip首页</label>
-        <div class="layui-input-block">
-            <input id="hk_index" type="text" name="hk_index" lay-verify="required" value="" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">状态</label>
-        <div class="layui-input-inline">
-            <input id="state" type="checkbox" lay-verify="required" lay-filter="status" lay-skin="switch" lay-text="启用|禁用">
         </div>
     </div>
 </div>
@@ -104,20 +44,26 @@
 <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 <script src="/layui/layui.js"></script>
 <script src="/js/vue.js"></script>
+<script src="//raw.githack.com/hnzzmsf/layui-formSelects/master/dist/formSelects-v4.js" type="text/javascript" charset="utf-8"></script>
 
 <script>
-
-    layui.use(['table','form', 'layedit', 'laydate'], function(){
+    layui.use(['table','form', 'layedit', 'laydate','formSelects'], function(){
         var table = layui.table,
             form = layui.form,
             layer = layui.layer,
             layedit = layui.layedit,
-            laydate = layui.laydate;
+            laydate = layui.laydate,
+            formSelects = layui.formSelects;
 
+        formSelects.data('user_ids', 'server', {
+            url: '/v1/auth/get_auths_select',
+            //linkage: true,
+            //linkageWidth: 130   //代表每一级别的宽度, 默认是100
+        });
 
         table.render({
-            elem: '#authTable'
-            ,url:'/v1/auth/get_auths'
+            elem: '#ctrTable'
+            ,url:'/v1/ctr/get_ctr_top'
             ,request: {
                 pageName: 'page', //页码的参数名称，默认：page
                 limitName: 'limit' //每页数据量的参数名，默认：limit
@@ -143,21 +89,23 @@
                 ,layEvent: 'LAYTABLE_TIPS'
                 ,icon: 'layui-icon-tips'
             }]
-            ,title: '审核表'
+            ,title: 'CTR表'
             ,height: 'full-200'
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'},
-                {field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true},
-                {field:'username', title:'账号', width:180, fixed: 'left', unresize: true, sort: true},
-                {field:'password', title:'密码', width:160},
-                {field:'app_id', title:'百家号[app_id]', width:160},
-                {field:'app_token', title:'百家号[app_token]', width:280},
-                {field:'secret_id', title:'腾讯云[secret_id]', width:340},
-                {field:'secret_key', title:'腾讯云[secret_key]', width:280},
-                {field:'cos_address', title:'腾讯云[cos_address]', width:280},
-                {field:'hk_index', title:'百家号首页', width:200, sort: true},
-                {field:'created_on', title:'创建时间', width:220, sort: true},
-                {fixed: 'right', title:'操作', toolbar: '#barTable', width:70},
+                {field:'user_name', title:'账号', width:180, fixed: 'left', unresize: true, sort: true},
+                {field:'article_id', title:'文章id', width:180},
+                {field:'title', title:'标题', width:260},
+                {field:'preview_url', title:'链接', width:260},
+                {field:'updated_at', title:'发布时间', width:180, sort: true},
+                {field:'status', title:'状态', width:100},
+                {field:'recommend_count', title:'推荐量', width:100, sort: true},
+                {field:'view_count', title:'播放量', width:100, sort: true},
+                {field:'comment_count', title:'评论量', width:100, sort: true},
+                {field:'ahare_count', title:'分享量', width:100, sort: true},
+                {field:'collect_count', title:'收藏量', width:100, sort: true},
+                {field:'likes_count', title:'点赞量', width:100, sort: true},
+                {field:'ctr', title:'CTR', width:100, sort: true},
             ]]
             ,page: false
         });
@@ -183,82 +131,6 @@
             var data = obj.data;
             if(obj.event === 'detail'){
                 layer.msg('ID：'+ data.username + ' 的查看操作');
-            } else if(obj.event === 'edit'){
-                if (data.state===0){
-                    $("#state").prop('checked',false);
-                }else if (data.state===1){
-                    $("#state").prop('checked',true);
-                }
-                form.render();
-                form.on('switch(status)',function(switchData){
-                    if (switchData.elem.checked===true){
-                        data.state = 1
-                    }else {
-                        data.state = 0
-                    }
-                });
-
-                //赋值
-                $("#username").val(data.username);
-                $("#password").val(data.password);
-                $("#app_id").val(data.app_id);
-                $("#app_token").val(data.app_token);
-                $("#secret_id").val(data.secret_id);
-                $("#secret_key").val(data.secret_key);
-                $("#cos_address").val(data.cos_address);
-                $("#hk_index").val(data.hk_index);
-
-                layer.open({
-                    type: 1,
-                    title: "修改信息",
-                    maxmin: true,//是否显示最大最小化按钮
-                    shadeClose: false,
-                    area: ['680px', '560px'],
-                    shade:0,
-                    btn: ['保存', '取消'],
-                    content: $("#openUpd"),
-                    yes: function(index, layero){
-                        data.username=$("#username").val(),
-                        data.password=$("#password").val(),
-                        data.app_id=$("#app_id").val(),
-                        data.app_token=$("#app_token").val(),
-                        data.secret_id=$("#secret_id").val(),
-                        data.secret_key=$("#secret_key").val(),
-                        data.cos_address=$("#cos_address").val(),
-                        data.hk_index=$("#hk_index").val(),
-                        console.log(data)
-
-                        $.ajax({
-                            url: '/v1/auth/upd_auth',
-                            contentType: 'application/json',
-                            type: 'POST',
-                            dataType: "json",
-                            data:JSON.stringify(data),
-                            success: function (result) {
-                                console.log(result)
-                                if (result.code===200){
-                                    reloadTable()
-                                    layer.close(index)
-                                }else {
-                                    layer.msg(result.msg);
-                                }
-                            }
-                        });
-                    },
-                    no:function(index, layero){
-
-                    }
-                });
-            }else if(obj.event === 'verify'){
-                layer.prompt({
-                    formType: 2
-                    ,value: data.state
-                }, function(value, index){
-                    obj.update({
-                        state: value
-                    });
-                    layer.close(index);
-                });
             }
         });
 
@@ -269,9 +141,10 @@
         });
 
         function reloadTable() {
-            table.reload('authTable', {
+            table.reload('ctrTable', {
                 where: {
-                    "username":$("#param_username").val()
+                    "user_ids":formSelects.value('user_ids', 'valStr'),
+                    "page_no":$("#page_no").val()
                 }
             });
         }

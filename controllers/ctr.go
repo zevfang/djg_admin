@@ -48,30 +48,29 @@ func (c *CtrController) GetCtrTop() {
 		return
 	}
 	auths, _ := models.GetAuthByIds(user_ids)
-	safeData := models.NewSafeDict(map[string]*models.CtrModel{})
+	safeData := models.NewSafeMap()
+
 	ch := make(chan *models.CtrModel)
 	wg := sync.WaitGroup{}
+	wg_count := len(auths) * int(page_size)
+	wg.Add(wg_count)
+
 	for _, item := range auths {
-		wg.Add(1)
-		go getCTR(page_no, page_size, item.Username, item.AppToken, item.AppID, ch, &wg)
+		go getCTR(page_no, page_size, item.Username, item.AppToken, item.AppID, ch)
 	}
-	go func() {
+	go func(wg *sync.WaitGroup) {
 		for {
 			r := <-ch
-			fmt.Println(r)
-			safeData.Put(r.ArticleId, r)
+			safeData.Set(r.ArticleId, r)
+			wg.Done()
 		}
-	}()
+	}(&wg)
 	wg.Wait()
-	// TODO 这里有bug，写入map丢失数据
-	resultData := []models.CtrModel{}
-	for k, _ := range safeData.Data {
-		item, ok := safeData.Get(k)
-		if ok {
-			resultData = append(resultData, *item)
-		}
-	}
 
+	resultData := []*models.CtrModel{}
+	for _, v := range safeData.D {
+		resultData = append(resultData, v.(*models.CtrModel))
+	}
 	c.Data["json"] = utils.TableResult{
 		Code:  200,
 		Msg:   "成功",
@@ -81,8 +80,7 @@ func (c *CtrController) GetCtrTop() {
 	c.ServeJSON()
 }
 
-func getCTR(pageNo, pageSize int64, userName string, appToken, appId string, ch chan<- *models.CtrModel, wg *sync.WaitGroup) {
-	defer wg.Done()
+func getCTR(pageNo, pageSize int64, userName string, appToken, appId string, ch chan<- *models.CtrModel) {
 	url := "https://baijiahao.baidu.com/builderinner/open/resource/query/articleListall"
 	urlState := "http://baijiahao.baidu.com/builderinner/open/resource/query/articleStatistics"
 	param := req.Param{

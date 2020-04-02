@@ -47,6 +47,8 @@
 <script src="//raw.githack.com/hnzzmsf/layui-formSelects/master/dist/formSelects-v4.js" type="text/javascript" charset="utf-8"></script>
 
 <script>
+
+
     layui.use(['table','form', 'layedit', 'laydate','formSelects'], function(){
         var table = layui.table,
             form = layui.form,
@@ -54,6 +56,7 @@
             layedit = layui.layedit,
             laydate = layui.laydate,
             formSelects = layui.formSelects;
+
 
         formSelects.data('user_ids', 'server', {
             url: '/v1/auth/get_auths_select',
@@ -93,19 +96,26 @@
             ,height: 'full-200'
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'},
-                {field:'user_name', title:'账号', width:180, fixed: 'left', unresize: true, sort: true},
-                {field:'article_id', title:'文章id', width:180},
-                {field:'title', title:'标题', width:260},
-                {field:'preview_url', title:'链接', width:260},
-                {field:'updated_at', title:'发布时间', width:180, sort: true},
-                {field:'status', title:'状态', width:100},
-                {field:'recommend_count', title:'推荐量', width:100, sort: true},
-                {field:'view_count', title:'播放量', width:100, sort: true},
-                {field:'comment_count', title:'评论量', width:100, sort: true},
+                {field:'user_name', title:'账号', width:160, fixed: 'left', unresize: true, sort: true},
+                {field:'updated_at', title:'发布时间', width:170, sort: true},
+                {field:'title', title:'标题', width:400},
+                {field:'comment_count',  title:'评论量', width:100, sort: true},
                 {field:'ahare_count', title:'分享量', width:100, sort: true},
                 {field:'collect_count', title:'收藏量', width:100, sort: true},
                 {field:'likes_count', title:'点赞量', width:100, sort: true},
-                {field:'ctr', title:'CTR', width:100, sort: true},
+                {field:'preview_url', title:'链接', width:260},
+                {field:'article_id', title:'文章id', width:180},
+                {field:'status', title:'状态', width:100},
+                {field:'recommend_count', fixed: 'right',unresize: true,title:'推荐量', width:100, sort: true},
+                {field:'view_count', fixed: 'right', unresize: true,title:'播放量', width:100, sort: true},
+                {field:'ctr', fixed: 'right', unresize: true, title:'CTR', width:100, sort: true,
+                    templet:function(d){
+                        if (d.ctr>=15){
+                            return '<span style="color: #47a429;">'+ d.ctr+ '</span>';
+                        }
+                        return '<span style="color: #ce2322;">'+ d.ctr+ '</span>';
+                    }
+                },
             ]]
             ,page: false
         });

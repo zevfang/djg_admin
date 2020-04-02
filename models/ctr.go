@@ -2,45 +2,56 @@ package models
 
 import "sync"
 
-// 安全的map
-type SafeDict struct {
-	Data map[string]*CtrModel
-	*sync.RWMutex
+// SafeMap is the struct that wraps a hashmap with a RWMutex
+type SafeMap struct {
+	mu sync.RWMutex
+	D  map[string]interface{}
 }
 
-func NewSafeDict(data map[string]*CtrModel) *SafeDict {
-	return &SafeDict{data, &sync.RWMutex{}}
-}
-
-func (d *SafeDict) Len() int {
-	d.RLock()
-	defer d.RUnlock()
-	return len(d.Data)
-}
-
-func (d *SafeDict) Put(key string, value *CtrModel) (*CtrModel, bool) {
-	d.Lock()
-	defer d.Unlock()
-	old_value, ok := d.Data[key]
-	d.Data[key] = value
-	return old_value, ok
-}
-
-func (d *SafeDict) Get(key string) (*CtrModel, bool) {
-	d.RLock()
-	defer d.RUnlock()
-	old_value, ok := d.Data[key]
-	return old_value, ok
-}
-
-func (d *SafeDict) Delete(key string) (*CtrModel, bool) {
-	d.Lock()
-	defer d.Unlock()
-	old_value, ok := d.Data[key]
-	if ok {
-		delete(d.Data, key)
+// New creates a new Safemap instance
+func NewSafeMap() *SafeMap {
+	m := &SafeMap{
+		D: map[string]interface{}{},
 	}
-	return old_value, ok
+	return m
+}
+
+// Set a value into the hashmap.
+func (m *SafeMap) Set(key string, value interface{}) {
+	m.mu.Lock()
+	m.D[key] = value
+	m.mu.Unlock()
+}
+
+// Get retrieves a value from the hashmap
+func (m *SafeMap) Get(key string) (interface{}, bool) {
+	m.mu.RLock()
+	val, ok := m.D[key]
+	m.mu.RUnlock()
+	return val, ok
+}
+
+// Has checks if hashmap has a key
+func (m *SafeMap) Has(key string) bool {
+	m.mu.RLock()
+	_, ok := m.D[key]
+	m.mu.RUnlock()
+	return ok
+}
+
+// Count gets an integer of the number of keys in the hashmap
+func (m *SafeMap) Count() int {
+	m.mu.RLock()
+	count := len(m.D)
+	m.mu.RUnlock()
+	return count
+}
+
+// Delete removes a key from the hashmap
+func (m *SafeMap) Delete(key string) {
+	m.mu.Lock()
+	delete(m.D, key)
+	m.mu.Unlock()
 }
 
 type CtrModel struct {

@@ -12,7 +12,7 @@ func init() {
 func NewNamespace() *beego.Namespace {
 	beego.Router("/", &controllers.IndexController{})
 	beego.Router("/login", &controllers.LoginController{})
-	beego.Router("/login_out", &controllers.LoginController{}, "get:LoginOut")
+	beego.Router("/logout", &controllers.LoginController{}, "get:LogOut")
 
 	np := beego.NewNamespace("/v1",
 		beego.NSNamespace("/console",

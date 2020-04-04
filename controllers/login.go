@@ -67,7 +67,7 @@ func (c *LoginController) Post() {
 	c.ServeJSON()
 }
 
-func (c *LoginController) LoginOut() {
+func (c *LoginController) LogOut() {
 	c.DelSession("is_login")
 	c.Redirect("/login", 302)
 }

@@ -2,11 +2,11 @@ package controllers
 
 import "github.com/astaxie/beego"
 
-type IndexController struct {
+type ConsoleController struct {
 	BaseController
 }
 
-func (c *IndexController) Prepare() {
+func (c *ConsoleController) Prepare() {
 	if beego.AppConfig.String("runmode") == "prod" {
 		isLogin := c.GetUser()
 		if !isLogin {
@@ -17,6 +17,6 @@ func (c *IndexController) Prepare() {
 }
 
 // @router / [get]
-func (c *IndexController) Get() {
-	c.TplName = "layout.html"
+func (c *ConsoleController) Get() {
+	c.TplName = "console.html"
 }

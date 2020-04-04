@@ -23,7 +23,6 @@ func (c *ArticleController) Prepare() {
 
 // @router / [get]
 func (c *ArticleController) Get() {
-	c.Layout = "layout.html"
 	c.TplName = "article.html"
 }
 

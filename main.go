@@ -10,9 +10,12 @@ import (
 
 func main() {
 	initSession()
-	models.InitMySQL(beego.AppConfig.String("mysql_connect"))
-	beego.SetStaticPath("/layui", "static/layui")
-	beego.SetStaticPath("/modules", "static/layui/lay/modules")
+	isDebug, err := beego.AppConfig.Bool("mysql_debug")
+	if err != nil {
+		panic(err)
+	}
+	models.InitMySQL(beego.AppConfig.String("mysql_connect"), isDebug)
+	beego.SetStaticPath("/layuiadmin", "static/layuiadmin")
 	beego.SetStaticPath("/js", "static/js")
 	beego.SetStaticPath("/css", "static/css")
 	beego.SetStaticPath("/file", "static/file")

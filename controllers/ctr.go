@@ -28,7 +28,6 @@ func (c *CtrController) Prepare() {
 
 // @router / [get]
 func (c *CtrController) Get() {
-	c.Layout = "layout.html"
 	c.TplName = "ctr.html"
 }
 

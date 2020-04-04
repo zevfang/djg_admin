@@ -5,6 +5,7 @@ import (
 	"djg_admin/utils"
 	"encoding/json"
 	"github.com/astaxie/beego"
+	"time"
 )
 
 type AuthController struct {
@@ -23,7 +24,6 @@ func (c *AuthController) Prepare() {
 
 // @router / [get]
 func (c *AuthController) Get() {
-	c.Layout = "layout.html"
 	c.TplName = "auth.html"
 }
 
@@ -65,14 +65,6 @@ func (c *AuthController) GetAuthsSelect() {
 	c.ServeJSON()
 }
 
-func (c *AuthController) GetAuth() {
-
-}
-
-func (c *AuthController) AddAuth() {
-
-}
-
 func (c *AuthController) UpdAuth() {
 	var model models.Auth
 	resBody := c.Ctx.Input.RequestBody
@@ -104,4 +96,44 @@ func (c *AuthController) UpdAuth() {
 		Data:  nil,
 	}
 	c.ServeJSON()
+}
+
+func (c *AuthController) AddAuth() {
+	if c.Ctx.Request.Method == "POST" {
+		var model models.Auth
+		resBody := c.Ctx.Input.RequestBody
+		err := json.Unmarshal(resBody, &model)
+		model.CreatedOn = time.Now()
+		if err != nil {
+			c.Data["json"] = utils.TableResult{
+				Code:  400,
+				Msg:   "序列化出错",
+				Count: 0,
+				Data:  err,
+			}
+			c.ServeJSON()
+		}
+		if err := models.AddAuth(model); err != nil {
+			c.Data["json"] = utils.TableResult{
+				Code:  400,
+				Msg:   "新增失败",
+				Count: 0,
+				Data:  err,
+			}
+			c.ServeJSON()
+		}
+		c.Data["json"] = utils.TableResult{
+			Code:  200,
+			Msg:   "新增成功",
+			Count: 0,
+			Data:  nil,
+		}
+		c.ServeJSON()
+		return
+	}
+	c.TplName = "add_auth.html"
+}
+
+func (c *AuthController) GetAuth() {
+
 }

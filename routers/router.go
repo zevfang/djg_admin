@@ -15,6 +15,11 @@ func NewNamespace() *beego.Namespace {
 	beego.Router("/login_out", &controllers.LoginController{}, "get:LoginOut")
 
 	np := beego.NewNamespace("/v1",
+		beego.NSNamespace("/console",
+			beego.NSInclude(
+				&controllers.ConsoleController{},
+			),
+		),
 		beego.NSNamespace("/article",
 			beego.NSInclude(
 				&controllers.ArticleController{},
@@ -30,7 +35,7 @@ func NewNamespace() *beego.Namespace {
 			beego.NSRouter("/get_auths", &controllers.AuthController{}, "get:GetAuths"),
 			beego.NSRouter("/get_auths_select", &controllers.AuthController{}, "get:GetAuthsSelect"),
 			beego.NSRouter("/get_auth", &controllers.AuthController{}, "get:GetAuth"),
-			beego.NSRouter("/add_auth", &controllers.AuthController{}, "post:AddAuth"),
+			beego.NSRouter("/add_auth", &controllers.AuthController{}, "get,post:AddAuth"),
 			beego.NSRouter("/upd_auth", &controllers.AuthController{}, "post:UpdAuth"),
 		),
 		beego.NSNamespace("/ctr",

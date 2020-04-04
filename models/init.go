@@ -19,15 +19,15 @@ type Model struct {
 	DeletedOn  time.Time `json:"deleted_on" orm:"column(deleted_on);type(datetime)"`
 }
 
-func InitMySQL(uri string) {
-	BindingTable(uri,
+func InitMySQL(uri string, isDebug bool) {
+	BindingTable(uri, isDebug,
 		new(Auth),
 		new(Article),
 	)
 }
 
-func BindingTable(connStr string, models ...interface{}) {
-	orm.Debug = true
+func BindingTable(connStr string, isDebug bool, models ...interface{}) {
+	orm.Debug = isDebug
 	orm.RegisterDataBase("default", "mysql", connStr)
 	orm.RegisterModel(models...)
 	// create table

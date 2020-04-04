@@ -78,3 +78,9 @@ func EditAuth(model Auth) error {
 	_, err := db.Update(&model)
 	return err
 }
+
+func AddAuth(model Auth) error {
+	db := orm.NewOrm()
+	_, err := db.Insert(&model)
+	return err
+}

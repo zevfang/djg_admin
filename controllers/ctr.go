@@ -68,7 +68,12 @@ func (c *CtrController) GetCtrTop() {
 
 	resultData := []*models.CtrModel{}
 	for _, v := range safeData.D {
-		resultData = append(resultData, v.(*models.CtrModel))
+		ctrModel := v.(*models.CtrModel)
+		articleModel, err := models.GetArticle(ctrModel.ArticleId) //联查出备注信息
+		if err == nil && len(articleModel.Remark) > 0 {
+			ctrModel.Remark = articleModel.Remark
+		}
+		resultData = append(resultData, ctrModel)
 	}
 	c.Data["json"] = utils.TableResult{
 		Code:  200,

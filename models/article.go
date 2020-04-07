@@ -19,9 +19,11 @@ type Article struct {
 	Content          string    `json:"content" orm:"column(content);type(text);"`
 	CosCoverImageUrl string    `json:"cos_cover_image_url" orm:"column(cos_cover_image_url);size(500);"`
 	CosVideoUrl      string    `json:"cos_video_url" orm:"column(cos_video_url);size(500);"`
+	BJHArticleUrl    string    `json:"bjh_article_url" orm:"column(bjh_article_url);size(500);"`
 	BJHArticleId     string    `json:"bjh_article_id" orm:"column(bjh_article_id);size(500);"`
 	State            int       `json:"state" orm:"column(state);"`
 	VerifyOn         time.Time `json:"verify_on" orm:"column(verify_on);"`
+	Remark           string    `json:"remark" orm:"column(remark);size(500);"`
 }
 
 type FindArticle struct {
@@ -78,4 +80,11 @@ func EditArticle(model Article) error {
 	db := orm.NewOrm()
 	_, err := db.Update(&model)
 	return err
+}
+
+func GetArticle(article_id string) (Article, error) {
+	var article Article
+	db := orm.NewOrm()
+	err := db.Raw("select * from djg_article where bjh_article_id=?;", article_id).QueryRow(&article)
+	return article, err
 }

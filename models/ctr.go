@@ -68,4 +68,5 @@ type CtrModel struct {
 	CollectCount   float64 `json:"collect_count"`
 	LikesCount     float64 `json:"likes_count"`
 	Ctr            float64 `json:"ctr"`
+	Remark         string  `json:"remark"`
 }

@@ -5,6 +5,7 @@ import (
 	"djg_admin/utils"
 	"encoding/json"
 	"github.com/astaxie/beego"
+	"strings"
 )
 
 type ArticleController struct {
@@ -85,6 +86,17 @@ func (c *ArticleController) UpdArticle() {
 		}
 		c.ServeJSON()
 	}
+
+	//自动填写article_id
+	if len(model.BJHArticleUrl) > 0 {
+		sps := strings.Split(model.BJHArticleUrl, "=")
+		if len(sps) == 2 {
+			model.BJHArticleId = sps[1]
+		}
+	} else {
+		model.BJHArticleId = ""
+	}
+
 	err = models.EditArticle(model)
 	if err != nil {
 		c.Data["json"] = utils.TableResult{

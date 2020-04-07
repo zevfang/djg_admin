@@ -47,7 +47,7 @@
 
             <script type="text/html" id="barTable">
                 <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">查看</a>
-                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="verify">发布</a>
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="remark">备注</a>
             </script>
         </div>
     </div>
@@ -95,15 +95,21 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">百家文章ID</label>
+        <label class="layui-form-label">百家文章Url</label>
         <div class="layui-input-block">
-            <input id="bjh_article_id" type="text" name="title" lay-verify="required" value="" autocomplete="off" class="layui-input">
+            <input id="bjh_article_url" type="text" name="title" lay-verify="required" value="" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">审核日期</label>
         <div class="layui-input-block">
             <input id="verify_on" type="text"  class="layui-input"  placeholder="审核日期">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注信息</label>
+        <div class="layui-input-block">
+            <input id="remark" name="remark" type="text" placeholder="可填写保量状况" lay-verify="required" value="" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -186,16 +192,25 @@
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'},
                 {field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true},
-                {field:'state_val', title:'状态', width:80, fixed: 'left', unresize: true, sort: true},
+                {field:'state_val', title:'状态', width:80, fixed: 'left', unresize: true, sort: true,
+                    templet:function(d){
+                        if (d.state_val === "已发布"){
+                            return '<span style="color: #47a429;">'+ d.state_val+ '</span>';
+                        }
+                        return d.state_val;
+                    }
+                },
                 {field:'username', title:'IP', width:160},
                 {field:'video_num', title:'Cos编号', width:90},
                 {field:'title', title:'主标题', width:300},
                 {field:'sub_title', title:'副标题', width:200},
                 {field:'tags', title:'标签', width:300},
                 {field:'desc', title:'视频简介', width:100, sort: true},
+                {field:'remark', title:'运营备注', width:150, sort: true},
                 {field:'created_on', title:'创建时间', width:220, sort: true},
                 {field:'verify_on', title:'审核时间', width:220, sort: true},
-                {field:'bjh_article_id', title:'百家号文章地址', width:220, sort: true},
+                {field:'bjh_article_id', title:'百家号文章Vid', width:220, sort: true},
+                {field:'bjh_article_url', title:'百家号文章Url', width:220, sort: true},
                 {fixed: 'right', title:'操作', toolbar: '#barTable', width:120},
             ]]
             ,page: true
@@ -244,8 +259,9 @@
                 $("#sub_title").val(data.sub_title);
                 $("#tags").val(data.tags);
                 $("#desc").val(data.desc);
-                $("#bjh_article_id").val(data.bjh_article_id);
+                $("#bjh_article_url").val(data.bjh_article_url);
                 $("#verify_on").val(data.verify_on);
+                $("#remark").val(data.remark);
 
                 layer.open({
                     type: 1,
@@ -263,7 +279,8 @@
                         data.sub_title=$("#sub_title").val();
                         data.tags=$("#tags").val();
                         data.desc=$("#desc").val();
-                        data.bjh_article_id=$("#bjh_article_id").val();
+                        data.bjh_article_url=$("#bjh_article_url").val();
+                        data.remark=$("#remark").val();
                         let verify_on_str=$("#verify_on").val();
                         data.verify_on=new Date(Date.parse(verify_on_str.replace(/-/g, "/")));
                         console.log(data)
@@ -289,14 +306,14 @@
 
                     }
                 });
-            }else if(obj.event === 'verify'){
+            }else if(obj.event === 'remark'){
                 layer.prompt({
                     formType: 2
-                    ,value: data.state
+                    ,value: data.remark
                 }, function(value, index){
-                    obj.update({
-                        state: value
-                    });
+                    // obj.update({
+                    //     state: value
+                    // });
                     layer.close(index);
                 });
             }

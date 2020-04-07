@@ -102,7 +102,8 @@
             //,height: 'full-120'
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'},
-                {field:'user_name', title:'账号', width:160, fixed: 'left', unresize: true, sort: true},
+                {field:'user_name', title:'账号', width:140, fixed: 'left', unresize: true, sort: true},
+                {field:'remark', title:'运营备注', width:100},
                 {field:'updated_at', title:'发布时间', width:170, sort: true},
                 {field:'title', title:'标题', width:400},
                 {field:'comment_count',  title:'评论量', width:100, sort: true},
@@ -112,6 +113,7 @@
                 {field:'preview_url', title:'链接', width:260},
                 {field:'article_id', title:'文章id', width:180},
                 {field:'status', title:'状态', width:100},
+
                 {field:'recommend_count', fixed: 'right',unresize: true,title:'推荐量', width:100, sort: true},
                 {field:'view_count', fixed: 'right', unresize: true,title:'播放量', width:100, sort: true},
                 {field:'ctr', fixed: 'right', unresize: true, title:'CTR', width:100, sort: true,

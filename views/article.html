@@ -42,6 +42,7 @@
             <script type="text/html" id="toolbarDemo">
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中数据</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="getCheckUrls">获取链接列表</button>
                 </div>
             </script>
 
@@ -224,7 +225,22 @@
                     var data = checkStatus.data;
                     layer.alert(JSON.stringify(data));
                     break;
-
+                case 'getCheckUrls':
+                    var urls = "";
+                    var data = checkStatus.data;
+                    data.forEach(function (item,index) {
+                        urls += item.bjh_article_url+"<br>";
+                    });
+                    layer.open({
+                        type: 1
+                        ,title: 'URL列表'
+                        ,area: ['480px', '260px']
+                        ,shade: 0.4
+                        ,maxmin: true
+                        ,content:'<div style="padding: 10px">'+ urls +'</div>'
+                        ,btn: [ '关闭']
+                    });
+                    break;
                 //自定义头工具栏右侧图标 - 提示
                 case 'LAYTABLE_TIPS':
                     layer.alert('这是工具栏右侧自定义的一个图标按钮');

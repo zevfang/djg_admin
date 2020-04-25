@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"github.com/astaxie/beego"
 	"strings"
+	"time"
 )
 
 type ArticleController struct {
@@ -111,6 +112,52 @@ func (c *ArticleController) UpdArticle() {
 	c.Data["json"] = utils.TableResult{
 		Code:  200,
 		Msg:   "更新成功",
+		Count: 0,
+		Data:  nil,
+	}
+	c.ServeJSON()
+}
+
+func (c *ArticleController) AddArticle() {
+	var model models.Article
+	resBody := c.Ctx.Input.RequestBody
+	err := json.Unmarshal(resBody, &model)
+	if err != nil {
+		c.Data["json"] = utils.TableResult{
+			Code:  400,
+			Msg:   "序列化出错",
+			Count: 0,
+			Data:  nil,
+		}
+		c.ServeJSON()
+	}
+
+	//自动填写article_id
+	if len(model.BJHArticleUrl) > 0 {
+		sps := strings.Split(model.BJHArticleUrl, "=")
+		if len(sps) == 2 {
+			model.BJHArticleId = sps[1]
+		}
+	} else {
+		model.BJHArticleId = ""
+	}
+
+	model.CreatedOn = time.Now()
+
+	err = models.AddArticle(model)
+	if err != nil {
+		c.Data["json"] = utils.TableResult{
+			Code:  400,
+			Msg:   "添加失败",
+			Count: 0,
+			Data:  nil,
+		}
+		c.ServeJSON()
+	}
+
+	c.Data["json"] = utils.TableResult{
+		Code:  200,
+		Msg:   "添加成功",
 		Count: 0,
 		Data:  nil,
 	}

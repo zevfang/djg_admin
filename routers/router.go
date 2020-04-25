@@ -27,6 +27,7 @@ func NewNamespace() *beego.Namespace {
 			beego.NSRouter("/get_articles", &controllers.ArticleController{}, "get:GetArticles"),
 			beego.NSRouter("/get_article", &controllers.ArticleController{}, "get:GetArticle"),
 			beego.NSRouter("/upd_article", &controllers.ArticleController{}, "post:UpdArticle"),
+			beego.NSRouter("/add_article", &controllers.ArticleController{}, "post:AddArticle"),
 		),
 		beego.NSNamespace("/auth",
 			beego.NSInclude(

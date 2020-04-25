@@ -82,6 +82,12 @@ func EditArticle(model Article) error {
 	return err
 }
 
+func AddArticle(model Article) error {
+	db := orm.NewOrm()
+	_, err := db.Insert(&model)
+	return err
+}
+
 func GetArticle(article_id string) (Article, error) {
 	var article Article
 	db := orm.NewOrm()
